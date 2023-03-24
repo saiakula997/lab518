@@ -7,7 +7,7 @@ GAIN = (2/3)
 TIME_S = (30)
 CHANNEL_COUNT = 4
 SAMPLE_FREQUENCY = (860)
-CSV_FILE_NAME = "hand_reflected.csv"
+CSV_FILE_NAME = "hand_normal_led__refracted_2.csv"
 
 pga_fsv = { 
     2/3 : 6.144,
