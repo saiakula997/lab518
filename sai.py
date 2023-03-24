@@ -4,12 +4,11 @@ import argparse
 import Adafruit_ADS1x15
 
 GAIN = (2/3)
-TIME_S = (5)
+TIME_S = (30)
 CHANNEL_COUNT = 4
-SAMPLE_FREQUENCY = (8)
-CSV_FILE_NAME = "sample.csv"
+SAMPLE_FREQUENCY = (860)
+CSV_FILE_NAME = "squaretritest.csv"
 
-READINGS =  TIME_S * int(SAMPLE_FREQUENCY/CHANNEL_COUNT)
 ADC_CSV_FILE_NAME = "ADC_" + CSV_FILE_NAME
 VOLTAGE_CSV_FILE_NAME = "VOLTAGE_" + CSV_FILE_NAME
 
@@ -20,19 +19,21 @@ args = parser.parse_args()
 CSV_FILE_NAME = args.file
 
 def get_readings():
-    global READINGS, GAIN, SAMPLE_FREQUENCY
-    
+    global GAIN, SAMPLE_FREQUENCY
+    print("Getting Readings wait for", TIME_S, "seconds ...")
     data = []
     adc1 = Adafruit_ADS1x15.ADS1115(address=0x48)
     adc2 = Adafruit_ADS1x15.ADS1115(address=0x49,busnum=1)
     
-    while READINGS :
+    start = time.time()
+    while int(time.time() - start) < TIME_S:
         values = [0]*8                                                                                                  
         for i in range(4):
             values[i] = adc1.read_adc(i,gain=GAIN, data_rate=SAMPLE_FREQUENCY)
             values[i+4] = adc2.read_adc(i,gain=GAIN, data_rate=SAMPLE_FREQUENCY)
         data.append(values)
-        READINGS -= 1
+        print(values)
+    print("Total readings", len(data))
     return data
 
 def convert_adc_voltage(data):
@@ -47,6 +48,7 @@ def write_csv_file(data, file_name):
     my_write = csv.writer(csvfile, delimiter = ',')
     my_write.writerow(['ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'ch6', 'ch7', 'ch8'])
     my_write.writerows(data)
+    print("Created file", file_name)
 
 data = get_readings()
 write_csv_file(data, ADC_CSV_FILE_NAME)

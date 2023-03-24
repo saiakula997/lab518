@@ -22,4 +22,5 @@ df6.plot(ax=axes[5])
 df7.plot(ax=axes[6])
 df8.plot(ax=axes[7])
 
+plt.savefig(args.file[:-3]+"png")
 plt.show()
