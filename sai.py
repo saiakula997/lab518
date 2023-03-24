@@ -7,15 +7,15 @@ GAIN = (2/3)
 TIME_S = (30)
 CHANNEL_COUNT = 4
 SAMPLE_FREQUENCY = (860)
-CSV_FILE_NAME = "squaretritest.csv"
+CSV_FILE_NAME = "hand_reflected.csv"
 
 pga_fsv = { 
-	2/3 : 6.144,
-	1   : 4.096,
-	2   : 2.048,
-	4   : 1.024,
-	8   : 0.512,
-	16  : 0.256,
+    2/3 : 6.144,
+    1   : 4.096,
+    2   : 2.048,
+    4   : 1.024,
+    8   : 0.512,
+    16  : 0.256,
 }
 
 ADC_CSV_FILE_NAME = "ADC_" + CSV_FILE_NAME
