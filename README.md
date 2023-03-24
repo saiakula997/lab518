@@ -18,3 +18,9 @@ Resolution depends on number of bits 16 bits.
 #  -   8 = +/-0.512V
 #  -  16 = +/-0.256V
 
+
+
+[ Steps to setup  RPI ] 
+sudo i2c-config # enable i2c
+sudo i2cdetect -y 1
+
