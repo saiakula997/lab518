@@ -9,6 +9,15 @@ CHANNEL_COUNT = 4
 SAMPLE_FREQUENCY = (8)
 CSV_FILE_NAME = "sample.csv"
 
+pga_fsv = { 
+	2/3 : 6.144,
+	1   : 4.096,
+	2   : 2.048,
+	4   : 1.024,
+	8   : 0.512,
+	16  : 0.256,
+}
+
 READINGS =  TIME_S * int(SAMPLE_FREQUENCY/CHANNEL_COUNT)
 ADC_CSV_FILE_NAME = "ADC_" + CSV_FILE_NAME
 VOLTAGE_CSV_FILE_NAME = "VOLTAGE_" + CSV_FILE_NAME
@@ -35,10 +44,13 @@ def get_readings():
         READINGS -= 1
     return data
 
+def convert(x):
+   return (x * pga_fsv[GAIN]) / ((2**16) * (GAIN))  
+
 def convert_adc_voltage(data):
     v_data = []
     for row in data:
-        v_row = [ (x*5)/(65536) for x in row]
+        v_row = [ convert(x) for x in row]
         v_data.append(v_row)
     return v_data
 
