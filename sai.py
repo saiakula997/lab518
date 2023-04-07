@@ -6,8 +6,8 @@ import Adafruit_ADS1x15
 GAIN = (2/3)
 TIME_S = (30)
 CHANNEL_COUNT = 4
-SAMPLE_FREQUENCY = (860)
-CSV_FILE_NAME = "test2.csv"
+SAMPLE_FREQUENCY = (128)
+CSV_FILE_NAME = "test.csv"
 
 pga_fsv = { 
     2/3 : 6.144,
@@ -32,14 +32,14 @@ def get_readings():
     print("Getting Readings wait for", TIME_S, "seconds ...")
     data = []
     adc1 = Adafruit_ADS1x15.ADS1115(address=0x48)
-    adc2 = Adafruit_ADS1x15.ADS1115(address=0x49,busnum=1)
+    #adc2 = Adafruit_ADS1x15.ADS1115(address=0x49,busnum=1)
     
     start = time.time()
     while int(time.time() - start) < TIME_S:
         values = [0]*8                                                                                                  
         for i in range(4):
             values[i] = adc1.read_adc(i,gain=GAIN, data_rate=SAMPLE_FREQUENCY)
-            values[i+4] = adc2.read_adc(i,gain=GAIN, data_rate=SAMPLE_FREQUENCY)
+            #values[i+4] = adc2.read_adc(i,gain=GAIN, data_rate=SAMPLE_FREQUENCY)
         data.append(values)
         print(values)
     print("Total readings", len(data))
