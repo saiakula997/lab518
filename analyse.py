@@ -5,7 +5,7 @@ import  matplotlib.pyplot as plt
 
 def get_averages(file_name):
     df = pd.read_csv(file_name)
-    top, bottom = df['ch1'], df['ch2']
+    top,bottom = df['ch2'], df['ch1']
     return (top.mean(), bottom.mean())
 
 def get_readings_subjects(subjects_dir_path):
