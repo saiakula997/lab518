@@ -22,17 +22,18 @@ def get_readings_subjects(subjects_dir_path):
             print(file, top, bottom)
     return top_readings, bottom_readings
 
-
-def plot_readings(readings, title):
-    for name in readings.keys():
-        plt.scatter( range(len(readings[name])), (readings[name]) , label=name)
+markers = ["." , "," , "o" , "v" , "^" , "<", ">"]
+person = 0 
+def plot_readings(top_readings, bottom_readings, title):
+    global person
+    for name in top_readings.keys():
+        plt.scatter( top_readings[name], bottom_readings[name] , label=name, marker=markers[person])
+        person += 1
     plt.legend()
     plt.title(title)
-    plt.savefig(title + ".png")
     plt.show()
 
 
-PATH = "./observations/subjects"
+PATH = "./observations/subjects/subjects"
 top_readings, bottom_readings = get_readings_subjects(PATH)
-plot_readings(top_readings, "Top")
-plot_readings(bottom_readings, "Bottom")
+plot_readings(top_readings, bottom_readings, "PLOT")
