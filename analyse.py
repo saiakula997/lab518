@@ -4,8 +4,6 @@ import argparse
 import pandas as pd
 import  matplotlib.pyplot as plt
 
-
-
 def get_averages(file_name):
     df = pd.read_csv(file_name)
     top,bottom = df['ch2'], df['ch1']
@@ -26,13 +24,12 @@ def get_readings_subjects(subjects_dir_path):
                 print(file, top, bottom)
     return top_readings, bottom_readings
 
-markers = ["." , "," , "o" , "v" , "^" , "<", ">"]
-person = 0 
+
+
 def plot_readings(top_readings, bottom_readings, title):
-    global person
-    for name in top_readings.keys():
-        plt.scatter( top_readings[name], bottom_readings[name] , label=name, marker=markers[person])
-        person += 1
+    markers = ["." , "," , "o" , "v" , "^" , "<", ">"]
+    for i,name in enumerate(top_readings.keys()):
+        plt.scatter( top_readings[name], bottom_readings[name] , label=name, marker=markers[i])
     plt.legend()
     plt.title(title)
     plt.savefig(args.folder+"/"+"figure.png")
