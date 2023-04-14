@@ -1,38 +1,68 @@
 import spidev
+import time
 import RPi.GPIO as GPIO
+
+# Set GPIO pins
+GPIO_CS = 8
+GPIO_WP = 7
 
 # Open SPI bus
 spi = spidev.SpiDev()
 spi.open(0, 0)
 
-# Configure SPI mode
-spi.mode = 0b01
+# Set SPI speed and mode
+spi.max_speed_hz = 1000000
+spi.mode = 0b00
 
-# Set chip select pin
+# Set up GPIO pins
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(22, GPIO.OUT)
-GPIO.output(22, GPIO.LOW)
+GPIO.setup(GPIO_CS, GPIO.OUT, initial=GPIO.HIGH)
+GPIO.setup(GPIO_WP, GPIO.OUT, initial=GPIO.LOW)
 
-# Enable writing to memory
-spi.xfer2([0x3D, 0x2A, 0x80])
+# Enable chip
+GPIO.output(GPIO_CS, GPIO.LOW)
 
-# Send write command and address
-spi.xfer2([0x84, 0x00, 0x00, 0x00])
+# Wait for chip to be ready
+while True:
+    status = spi.xfer([0xD7, 0x00])[1]
+    if (status & 0x80) == 0x80:
+        break
+    time.sleep(0.01)
 
-# Send data to write
-data = [0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF]
-spi.xfer2(data)
+# Erase first sector (4KB)
+GPIO.output(GPIO_WP, GPIO.LOW)
+spi.xfer([0x81, 0x00, 0x00, 0x00])
+GPIO.output(GPIO_WP, GPIO.HIGH)
+
+# Wait for erase to complete
+while True:
+    status = spi.xfer([0xD7, 0x00])[1]
+    if (status & 0x80) == 0x80:
+        break
+    time.sleep(0.01)
+
+# Write data to memory
+GPIO.output(GPIO_WP, GPIO.LOW)
+data = [0x02, 0x00, 0x00, 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC]
+spi.xfer([0x82, 0x00, 0x00, 0x00] + data)
+GPIO.output(GPIO_WP, GPIO.HIGH)
 
 # Wait for write to complete
-status = 0
-while (status & 0x80) == 0:
-    status = spi.xfer2([0xD7, 0x00])[1]
+while True:
+    status = spi.xfer([0xD7, 0x00])[1]
+    if (status & 0x80) == 0x80:
+        break
+    time.sleep(0.01)
 
-# Disable writing to memory
-spi.xfer2([0x3D, 0x2A, 0x00])
+# Read data from memory
+GPIO.output(GPIO_WP, GPIO.LOW)
+spi.xfer([0x03, 0x00, 0x00, 0x00])
+data = spi.xfer([0x00]*16)
+print("Read data: ", data)
+GPIO.output(GPIO_WP, GPIO.HIGH)
 
-# Set chip select pin back to high
-GPIO.output(22, GPIO.HIGH)
+# Disable chip
+GPIO.output(GPIO_CS, GPIO.HIGH)
 
 # Close SPI bus
 spi.close()
