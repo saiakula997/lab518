@@ -1,68 +1,35 @@
 import spidev
-import time
-import RPi.GPIO as GPIO
 
-# Set GPIO pins
-GPIO_CS = 8
-GPIO_WP = 7
-
-# Open SPI bus
+# Set up SPI interface
 spi = spidev.SpiDev()
-spi.open(0, 0)
+spi.open(0, 0)  # SPI bus 0, device 0
+spi.max_speed_hz = 5000000  # Set SPI clock speed
 
-# Set SPI speed and mode
-spi.max_speed_hz = 1000000
-spi.mode = 0b00
+# Send command to read device ID
+command = [0x9F]  # Device ID read command
+response = spi.xfer2(command + [0x00, 0x00, 0x00])  # Send command and receive 4 bytes of response
+device_id = (response[1] << 16) | (response[2] << 8) | response[3]  # Combine response bytes into device ID
 
-# Set up GPIO pins
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(GPIO_CS, GPIO.OUT, initial=GPIO.HIGH)
-GPIO.setup(GPIO_WP, GPIO.OUT, initial=GPIO.LOW)
+print("Device ID: 0x{:06X}".format(device_id))
 
-# Enable chip
-GPIO.output(GPIO_CS, GPIO.LOW)
+# Send command to read status register
+command = [0xD7]  # Status register read command
+response = spi.xfer2(command + [0x00])  # Send command and receive 1 byte of response
+status_register = response[1]  # Get status register value
 
-# Wait for chip to be ready
-while True:
-    status = spi.xfer([0xD7, 0x00])[1]
-    if (status & 0x80) == 0x80:
-        break
-    time.sleep(0.01)
+print("Status Register: 0x{:02X}".format(status_register))
 
-# Erase first sector (4KB)
-GPIO.output(GPIO_WP, GPIO.LOW)
-spi.xfer([0x81, 0x00, 0x00, 0x00])
-GPIO.output(GPIO_WP, GPIO.HIGH)
+# Send command to write data to memory
+command = [0x82, 0x00, 0x00, 0x00]  # Page program command and memory address
+data = [0xDE, 0xAD, 0xBE, 0xEF]  # Data to write
+spi.xfer2(command + data)  # Send command and data
 
-# Wait for erase to complete
-while True:
-    status = spi.xfer([0xD7, 0x00])[1]
-    if (status & 0x80) == 0x80:
-        break
-    time.sleep(0.01)
+# Send command to read data from memory
+command = [0x03, 0x00, 0x00, 0x00]  # Read data command and memory address
+response = spi.xfer2(command + [0x00, 0x00, 0x00])  # Send command and receive 4 bytes of response
+read_data = response[4:]  # Extract data bytes from response
 
-# Write data to memory
-GPIO.output(GPIO_WP, GPIO.LOW)
-data = [0x02, 0x00, 0x00, 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC]
-spi.xfer([0x82, 0x00, 0x00, 0x00] + data)
-GPIO.output(GPIO_WP, GPIO.HIGH)
+print("Read Data: ", read_data)
 
-# Wait for write to complete
-while True:
-    status = spi.xfer([0xD7, 0x00])[1]
-    if (status & 0x80) == 0x80:
-        break
-    time.sleep(0.01)
-
-# Read data from memory
-GPIO.output(GPIO_WP, GPIO.LOW)
-spi.xfer([0x03, 0x00, 0x00, 0x00])
-data = spi.xfer([0x00]*16)
-print("Read data: ", data)
-GPIO.output(GPIO_WP, GPIO.HIGH)
-
-# Disable chip
-GPIO.output(GPIO_CS, GPIO.HIGH)
-
-# Close SPI bus
+# Close SPI interface
 spi.close()
