@@ -27,7 +27,7 @@ def get_readings_subjects(subjects_dir_path):
 
 
 def plot_readings(top_readings, bottom_readings, title):
-    markers = ["." , "," , "o" , "v" , "^" , "<", ">"]
+    markers = ["." , "," , "o" , "v" , "^" , "<", ">", "*", "s", "p", "P"]
     for i,name in enumerate(top_readings.keys()):
         plt.scatter( top_readings[name], bottom_readings[name] , label=name, marker=markers[i])
     plt.legend()
