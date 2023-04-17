@@ -19,13 +19,11 @@ def get_readings_subjects(subjects_dir_path):
             top_readings[name] = []
             bottom_readings[name] = []     
             for file in os.listdir(path):
-                top, bottom = get_averages(path+'/'+file)
-                top_readings[name].append(top)
-                bottom_readings[name].append(bottom)
-                print(file, top, bottom)
+                if file[-3:] == "csv":
+                    top, bottom = get_averages(path+'/'+file)
+                    top_readings[name].append(top)
+                    bottom_readings[name].append(bottom)
     return top_readings, bottom_readings
-
-
 
 def plot_readings(top_readings, bottom_readings, title):
     markers = ["." , "," , "o" , "v" , "^" , "<", ">", "*", "s", "p", "P"]
@@ -39,7 +37,6 @@ def plot_readings(top_readings, bottom_readings, title):
 parser = argparse.ArgumentParser()
 parser.add_argument('--folder', type=str, required=True)
 args = parser.parse_args()
-
 
 top_readings, bottom_readings = get_readings_subjects(args.folder)
 plot_readings(top_readings, bottom_readings, "PLOT")
