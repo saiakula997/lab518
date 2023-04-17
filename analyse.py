@@ -6,8 +6,8 @@ import  matplotlib.pyplot as plt
 
 def get_averages(file_name):
     df = pd.read_csv(file_name)
-    top,bottom = df['ch2'], df['ch1']
-    return (top.mean(), bottom.mean())
+    ch1, ch2, ch3, ch4 = df['ch1'], df['ch2'], df['ch3'], df['ch4']
+    return ( ((ch1.mean()+ch3.mean())/2),  ((ch2.mean()+ch4.mean())/2))
 
 def get_readings_subjects(subjects_dir_path):
     top_readings = {}
