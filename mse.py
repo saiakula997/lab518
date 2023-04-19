@@ -15,4 +15,4 @@ channels = ['ch1','ch2', 'ch3','ch4', 'ch5','ch6', 'ch7','ch8']
 for ch in channels:
     mse = (one[ch].mean() - two[ch].mean())**2
     total_mse += mse
-print("Total Mean Square Error", total_mse/len(channels))
+print("Total Mean Square Error", total_mse/len(channels) )
