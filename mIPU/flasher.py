@@ -1,9 +1,17 @@
 import spidev
+import RPi.GPIO as GPIO
 
 # Set up SPI interface
 spi = spidev.SpiDev()
 spi.open(0, 0)  # SPI bus 0, device 0
 spi.max_speed_hz = 5000000  # Set SPI clock speed
+spi.mode = 0b11
+
+
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(8, GPIO.OUT)
+
 
 # Send command to read device ID
 command = [0x9F]  # Device ID read command
@@ -31,5 +39,6 @@ read_data = response[4:]  # Extract data bytes from response
 
 print("Read Data: ", read_data)
 
+GPIO.cleanup()
 # Close SPI interface
 spi.close()
