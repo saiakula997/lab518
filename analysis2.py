@@ -61,4 +61,3 @@ for i, name in  enumerate(readings.keys()):
 
 print(pred)
 plot_readings(pred, "PLOT")
-
