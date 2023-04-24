@@ -32,11 +32,12 @@ def CMD_BUFFER_1_WRITE(address): return [0x84] + address_split(address)  # cmd +
 def CMD_MAIN_MEM_PG_PROG_BUILT_IN_ERASE(address): return [0x82] + address_split(address)  # cmd + address 
 
 def Print_Status_Register():
+    print(Read_Status_Register())
     pass
 
 def Read_Status_Register():
     response = spi.xfer2(CMD_STATUS_REG_READ)
-    return response[1], response[2] 
+    return hex(response[1]), hex(response[2]) 
 
 def Wait_Device_Ready():
     byte1, byte2 = Read_Status_Register()
@@ -45,7 +46,7 @@ def Wait_Device_Ready():
 def Get_Device_ID():
     response = spi.xfer2(CMD_DEVICE_ID)
     M_ID, D_ID = response[1], (response[2]<<8 | response[3]) # ignoring response[4,5] EDI Data  
-    return M_ID, D_ID
+    return hex(M_ID), hex(D_ID)
 
 def Read_n_Bytes_Address(address, n):
     data = [ 0x00, ] * n
@@ -84,6 +85,12 @@ def execute_cmd(choice):
         Print_Status_Register()
     elif choice == '2':
         pass
+    elif choice == '3':
+        print("Enter Address in Hexa :", end='')
+        address = int(input(), 16)
+        print("Enter Number of Bytes to Read :", end='')
+        n = int(input())
+        print([hex(x) for x in Read_n_Bytes_Address(address, n)])
     elif choice == '6':
         print(Get_Device_ID())
 
