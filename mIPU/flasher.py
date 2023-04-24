@@ -54,10 +54,18 @@ def Read_n_Bytes_Address(address, n):
     return response[-n:]
 
 def Write_n_Bytes_Address(address, data):
-    response = spi.xfer2(CMD_CONT_ARRAY_READ_LF(address) + data)
+    response = spi.xfer2(CMD_BUFFER_1_WRITE(address) + data)
 
 def Erase_Write_n_Bytes_Address(address, data):
      response = spi.xfer2(CMD_MAIN_MEM_PG_PROG_BUILT_IN_ERASE(address) + data)
+
+def Read_String_n_Bytes_Address(address, n):
+    data = Read_n_Bytes_Address(address, n)
+    print(">> String Read : ", ''.join([chr(x) for x in data]))
+    
+def Write_String_n_Bytes_Address(address, data):
+    data = [ord(x) for x in data]
+    Erase_Write_n_Bytes_Address(address, data)
 
 def read_status(txt):
     # Send command to read status register
@@ -69,11 +77,13 @@ def read_status(txt):
 def print_menu():
     print("################################################################")
     print("1. Get Status Register")
-    print("2. Write 'n' Bytes into Address")
+    print("2. Erase and write from Address")
     print("3. Read 'n' Bytes from Address")
     print("4. Write into multiple pages")
     print("5. Read from multiple pages")
     print("6. Get Device ID(s)")
+    print("w. Write String to Address")
+    print("r. Read String from Address")
     print("q. quit")
     print("################################################################")
     print("Enter Command Choice : ")
@@ -84,13 +94,31 @@ def execute_cmd(choice):
     if choice == '1':
         Print_Status_Register()
     elif choice == '2':
-        pass
+        print("Enter Address in Hexa :", end='')
+        address = int(input(), 16)
+        Erase_Write_n_Bytes_Address(address, [0x1A, 0x1B, 0x1C, 0x1D, 0x1E])
     elif choice == '3':
         print("Enter Address in Hexa :", end='')
         address = int(input(), 16)
         print("Enter Number of Bytes to Read :", end='')
         n = int(input())
         print([hex(x) for x in Read_n_Bytes_Address(address, n)])
+    elif choice == '4':
+        print("Enter Address in Hexa :", end='')
+        address = int(input(), 16)
+        
+    elif choice == 'w':
+        print("Enter Address in Hexa :", end='')
+        address = int(input(), 16)
+        print("Enter String data :")
+        data = input()
+        Write_String_n_Bytes_Address(address, data)
+    elif choice == 'r':
+        print("Enter Address in Hexa :", end='')
+        address = int(input(), 16)
+        print("Enter Number of Bytes to Read :", end='')
+        n = int(input())
+        data = Read_String_n_Bytes_Address(address, n)
     elif choice == '6':
         print(Get_Device_ID())
 
