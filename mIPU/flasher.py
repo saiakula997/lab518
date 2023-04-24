@@ -53,11 +53,24 @@ def Read_n_Bytes_Address(address, n):
     response = spi.xfer2(CMD_CONT_ARRAY_READ_LF(address) + data)
     return response[-n:]
 
+def Erase_Write_Address(address, data):
+    response = spi.xfer2(CMD_MAIN_MEM_PG_PROG_BUILT_IN_ERASE(address) + data)
+
 def Write_n_Bytes_Address(address, data):
     response = spi.xfer2(CMD_BUFFER_1_WRITE(address) + data)
 
 def Erase_Write_n_Bytes_Address(address, data):
-     response = spi.xfer2(CMD_MAIN_MEM_PG_PROG_BUILT_IN_ERASE(address) + data)
+    PAGE_SIZE = 512
+    len_data_written = 0
+    len_data_left = len(data)
+    print("Data Length --> ", len_data_left)
+    while len_data_left > 0:
+        n = len_data_left//PAGE_SIZE
+        Erase_Write_Address(address, data[0:n])
+        len_data_left -= n
+        len_data_written += n
+        del data [0:n]
+    print("After -> ", len_data_left, len_data_written)
 
 def Read_String_n_Bytes_Address(address, n):
     data = Read_n_Bytes_Address(address, n)
@@ -96,7 +109,7 @@ def execute_cmd(choice):
     elif choice == '2':
         print("Enter Address in Hexa :", end='')
         address = int(input(), 16)
-        Erase_Write_n_Bytes_Address(address, [0x1A, 0x1B, 0x1C, 0x1D, 0x1E])
+        Erase_Write_Address(address, [0x1A, 0x1B, 0x1C, 0x1D, 0x1E])
     elif choice == '3':
         print("Enter Address in Hexa :", end='')
         address = int(input(), 16)
@@ -106,7 +119,6 @@ def execute_cmd(choice):
     elif choice == '4':
         print("Enter Address in Hexa :", end='')
         address = int(input(), 16)
-        
     elif choice == 'w':
         print("Enter Address in Hexa :", end='')
         address = int(input(), 16)
