@@ -26,8 +26,10 @@ def address_split(address): return [ (address >> 16) & 0xFF, (address >> 8) & 0x
 def CMD_MAIN_MEM_PG_READ(address): return [0xD2] + address_split(address) + DUMMY_BITS_32 # cmd + address (to read a page)
 def CMD_CONT_ARRAY_READ_LF(address): return [0x03] + address_split(address)  # cmd + address 
 
-# Write Commands
 
+# Write Commands
+def CMD_BUFFER_1_WRITE(address): return [0x84] + address_split(address)  # cmd + address 
+def CMD_MAIN_MEM_PG_PROG_BUILT_IN_ERASE(address): return [0x82] + address_split(address)  # cmd + address 
 
 def Print_Status_Register():
     pass
@@ -51,7 +53,10 @@ def Read_n_Bytes_Address(address, n):
     return response[-n:]
 
 def Write_n_Bytes_Address(address, data):
-    pass
+    response = spi.xfer2(CMD_CONT_ARRAY_READ_LF(address) + data)
+
+def Erase_Write_n_Bytes_Address(address, data):
+     response = spi.xfer2(CMD_MAIN_MEM_PG_PROG_BUILT_IN_ERASE(address) + data)
 
 def read_status(txt):
     # Send command to read status register
@@ -110,14 +115,14 @@ if __name__ == "__main__" :
 
 
     # Send command to read device ID
-command = [0x9F]  # Device ID read command
-response = spi.xfer2(command + [0x00, 0x00, 0x00, 0x00, 0x00])  # Send command and receive 4 bytes of response
-print("raw device ID : ", ([hex(x) for x in response]))
+#command = [0x9F]  # Device ID read command
+#response = spi.xfer2(command + [0x00, 0x00, 0x00, 0x00, 0x00])  # Send command and receive 4 bytes of response
+#print("raw device ID : ", ([hex(x) for x in response]))
 
 #device_id = (response[1] << 16) | (response[2] << 8) | response[3]  # Combine response bytes into device ID
 #print("Device ID: 0x{:06X}".format(device_id))
 
-read_status("After reading Device ID ")
+#read_status("After reading Device ID ")
 
 # Send command to write data to memory
 #command = [0x82, 0x00, 0x00, 0x00]  # Page program command and memory address
@@ -129,11 +134,11 @@ read_status("After reading Device ID ")
 #read_status("After Writing ")
 
 # Send command to read data from memory
-command = [0x03, 0x00, 0x00, 0x00]  # Read data command and memory address
-response = spi.xfer2(command + [0x00, 0x00, 0x00, 0x00])  # Send command and receive 4 bytes of response
-print([hex(x) for x in response])
+#command = [0x03, 0x00, 0x00, 0x00]  # Read data command and memory address
+#response = spi.xfer2(command + [0x00, 0x00, 0x00, 0x00])  # Send command and receive 4 bytes of response
+#print([hex(x) for x in response])
 
-read_status("After Reading ")
+#ead_status("After Reading ")
 
 #read_data = response[4:]  # Extract data bytes from response
 #print("Read Data: ", read_data)
