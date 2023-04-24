@@ -64,16 +64,17 @@ def Erase_Write_n_Bytes_Address(address, data):
     len_data_written = 0
     len_data_left = len(data)
     n = PAGE_SIZE - (address%PAGE_SIZE)
-    print("Data Length --> ", len_data_left)
     while len_data_left > PAGE_SIZE:
-        print(address, data[0:n])
+        Erase_Write_Address(address, data[0:n])
+        print(address, data)
         len_data_left -= n
         len_data_written += n
         address += n
         del data [0:n]
         n = PAGE_SIZE if len_data_left > PAGE_SIZE else len_data_left
+    Erase_Write_Address(address, data)
     print(address, data)
-    print("After -> ", len_data_left, len_data_written)
+    
 
 def Read_String_n_Bytes_Address(address, n):
     data = Read_n_Bytes_Address(address, n)
