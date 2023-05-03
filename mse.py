@@ -11,7 +11,7 @@ one = pd.read_csv(args.file1)
 two = pd.read_csv(args.file2)
 
 total_mse = 0
-channels = ['ch1','ch2', 'ch3','ch4', 'ch5','ch6', 'ch7','ch8']
+channels = ['ch1','ch2']
 for ch in channels:
     mse = (one[ch].mean() - two[ch].mean())**2
     total_mse += mse
