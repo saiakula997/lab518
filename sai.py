@@ -7,7 +7,7 @@ GAIN = (2/3)
 TIME_S = (30)
 CHANNEL_COUNT = 4
 SAMPLE_FREQUENCY = (128)
-CSV_FILE_NAME = "test_mug2_30sec.csv"
+CSV_FILE_NAME = "test.csv"
 
 pga_fsv = { 
     2/3 : 6.144,
@@ -17,6 +17,7 @@ pga_fsv = {
     8   : 0.512,
     16  : 0.256,
 }
+
 
 ADC_CSV_FILE_NAME = "ADC_" + CSV_FILE_NAME
 VOLTAGE_CSV_FILE_NAME = "VOLTAGE_" + CSV_FILE_NAME
