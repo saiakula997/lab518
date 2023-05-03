@@ -18,6 +18,10 @@ pga_fsv = {
     16  : 0.256,
 }
 
+ADC_COUNT = 1
+SENSORS_PER_ADC = 4
+TOTAL_SENSORS_COUNT = ADC_COUNT * SENSORS_PER_ADC
+SENSORS_UTILIZED = 2 #top and bottom of hand
 
 ADC_CSV_FILE_NAME = "ADC_" + CSV_FILE_NAME
 VOLTAGE_CSV_FILE_NAME = "VOLTAGE_" + CSV_FILE_NAME
@@ -37,8 +41,8 @@ def get_readings():
     
     start = time.time()
     while int(time.time() - start) < TIME_S:
-        values = [0]*8                                                                                                  
-        for i in range(4):
+        values = [0]*SENSORS_UTILIZED                                                                                                  
+        for i in range(SENSORS_UTILIZED):
             values[i] = adc1.read_adc(i,gain=GAIN, data_rate=SAMPLE_FREQUENCY)
             #values[i+4] = adc2.read_adc(i,gain=GAIN, data_rate=SAMPLE_FREQUENCY)
         data.append(values)
@@ -59,7 +63,7 @@ def convert_adc_voltage(data):
 def write_csv_file(data, file_name):
     csvfile = open(file_name, "w")
     my_write = csv.writer(csvfile, delimiter = ',')
-    my_write.writerow(['ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'ch6', 'ch7', 'ch8'])
+    my_write.writerow(['ch1', 'ch2'])
     my_write.writerows(data)
     print("Created file", file_name)
 
