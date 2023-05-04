@@ -4,10 +4,11 @@ import argparse
 import Adafruit_ADS1x15
 
 GAIN = (2/3)
-TIME_S = (30)
+TIME_S = 480
 CHANNEL_COUNT = 4
 SAMPLE_FREQUENCY = (128)
-CSV_FILE_NAME = "test.csv"
+CSV_FILE_NAME = "Preethi_sample_2.csv"
+
 
 pga_fsv = { 
     2/3 : 6.144,
