@@ -7,7 +7,8 @@ GAIN = (2/3)
 TIME_S = 480
 CHANNEL_COUNT = 2
 SAMPLE_FREQUENCY = (128)
-CSV_FILE_NAME = "Preethi_sample_2.csv"
+CSV_FILE_NAME = "test.csv"
+
 
 TOTAL_READINGS = (float(SAMPLE_FREQUENCY)/float(CHANNEL_COUNT))*(float(TIME_S))
 
@@ -35,7 +36,7 @@ args = parser.parse_args()
 CSV_FILE_NAME = args.file
 
 def get_readings():
-    global GAIN, SAMPLE_FREQUENCY
+    global GAIN, SAMPLE_FREQUENCY, TOTAL_READINGS
     print("Getting Readings wait for", TIME_S, "seconds ...")
     data = []
     adc1 = Adafruit_ADS1x15.ADS1115(address=0x48)
