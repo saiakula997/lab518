@@ -4,10 +4,10 @@ import argparse
 import Adafruit_ADS1x15
 
 GAIN = (2/3)
-TIME_S = 480
+TIME_S = 30
 CHANNEL_COUNT = 2
 SAMPLE_FREQUENCY = (128)
-CSV_FILE_NAME = "test.csv"
+CSV_FILE_NAME = "tset.csv"
 
 
 TOTAL_READINGS = (float(SAMPLE_FREQUENCY)/float(CHANNEL_COUNT))*(float(TIME_S))
