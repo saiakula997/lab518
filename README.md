@@ -24,3 +24,4 @@ Resolution depends on number of bits 16 bits.
 sudo i2c-config # enable i2c
 sudo i2cdetect -y 1
 
+a
