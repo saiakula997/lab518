@@ -91,6 +91,14 @@ def read_status(txt):
     print(txt, end='')
     print(" --> Status Register", [hex(x) for x in response] )
 
+def Read_From_File(filename):
+    f = open(filename)
+    data = f.read()
+    f.close()
+    return data, len(data)
+    
+
+
 def print_menu():
     print("################################################################")
     print("1. Get Status Register")
@@ -101,6 +109,7 @@ def print_menu():
     print("6. Get Device ID(s)")
     print("w. Write String to Address")
     print("r. Read String from Address")
+    print("f. Read from file and write to Address")
     print("q. quit")
     print("################################################################")
     print("Enter Command Choice : ")
@@ -137,6 +146,12 @@ def execute_cmd(choice):
         data = Read_String_n_Bytes_Address(address, n)
     elif choice == '6':
         print(Get_Device_ID())
+    elif choice == 'f':
+        print("Enter Address in Hexa :", end='')
+        address = int(input(), 16)
+        filename = "TEST.txt"
+        data, size = Read_From_File(filename)
+        Write_String_n_Bytes_Address(address, data)
 
 
 # Set up SPI interface
