@@ -21,7 +21,5 @@ Resolution depends on number of bits 16 bits.
 
 
 [ Steps to setup  RPI ] 
-sudo i2c-config # enable i2c
+sudo raspi-config # enable i2c
 sudo i2cdetect -y 1
-
-a
