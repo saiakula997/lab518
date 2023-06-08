@@ -1,5 +1,6 @@
 import spidev
 import RPi.GPIO as GPIO
+import time
 
 # Dummy Bits
 DUMMY_BITS_8 =  [0x00]
@@ -66,6 +67,7 @@ def Erase_Write_n_Bytes_Address(address, data):
     n = PAGE_SIZE - (address%PAGE_SIZE)
     while len_data_left > PAGE_SIZE:
         Erase_Write_Address(address, data[0:n])
+        time.sleep(1)
         print(address, data)
         len_data_left -= n
         len_data_written += n
