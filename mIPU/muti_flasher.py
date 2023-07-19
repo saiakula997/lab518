@@ -21,7 +21,7 @@ CMD_MAIN_MEM_PG_BUF2_TRANSFER = "0x55 + address"
 CMD_AUTO_PG_RW_BUF1 = "0x58 + address"
 CMD_AUTO_PG_RW_BUF2 = "0x59 + address"
 
-GPIO_MUX_TEST_LED=2 
+GPIO_TEST_LED=2 
 GPIO_MUX_SELECT=21
 GPIO_MUX_G_PIN=13
 
@@ -115,9 +115,11 @@ def print_menu():
     print("w. Write String to Address")
     print("r. Read String from Address")
     print("f. Read from file and write to Address")
-    print("MUX_TEST. To Toggle MUX LED")
-    print("MUX_A. To Select MUX A")
-    print("MUX_B. To Select MUX B")
+    print("TEST_LED. To Toggle MUX LED")
+    print("MUX_ENABLE. To Enable Mux")
+    print("MUX_Disable. To Disable Mux")
+    print("MUX_A. To Select Mux A")
+    print("MUX_B. To Select Mux B")
     print("q. quit")
     print("################################################################")
     print("Enter Command Choice : ")
@@ -160,18 +162,23 @@ def execute_cmd(choice):
         filename = "TEST.txt"
         data, size = Read_From_File(filename)
         Write_String_n_Bytes_Address(address, data)
-    elif choice == 'MUX_TEST':
-        GPIO.output(GPIO_MUX_TEST_LED, not GPIO.input(GPIO_MUX_TEST_LED))
+    elif choice == 'TEST_LED':
+        GPIO.output(GPIO_TEST_LED, not GPIO.input(GPIO_TEST_LED))
     elif choice == 'MUX_A':
         GPIO.output(GPIO_MUX_SELECT, GPIO.LOW)
     elif choice == 'MUX_B':
-        GPIO.output(GPIO_MUX_SELECT, GPIO.HIGH)    
-        
+        GPIO.output(GPIO_MUX_SELECT, GPIO.HIGH)
+    elif choice == 'MUX_ENABLE': # Enable IC 
+        GPIO.output(GPIO_MUX_G_PIN, GPIO.LOW)
+        GPIO.output(GPIO_TEST_LED, GPIO.HIGH)
+    elif choice == 'MUX_DISABLE': # Disable IC 
+        GPIO.output(GPIO_MUX_G_PIN, GPIO.HIGH)
+        GPIO.output(GPIO_TEST_LED, GPIO.LOW)
 
 # Set up SPI interface
 spi = spidev.SpiDev()
 spi.open(0, 0)  # SPI bus 0, device 0
-spi.max_speed_hz = 5000000  # Set SPI clock speed
+spi.max_speed_hz = 5000  # Set SPI clock speed
 spi.mode = 0b11
 
 # setup GPIO 
@@ -179,7 +186,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(8, GPIO.OUT) 
 GPIO.setup(GPIO_MUX_G_PIN, GPIO.OUT)
 GPIO.setup(GPIO_MUX_SELECT, GPIO.OUT)
-GPIO.setup(GPIO_MUX_TEST_LED, GPIO.OUT)
+GPIO.setup(GPIO_TEST_LED, GPIO.OUT)
 
 
 if __name__ == "__main__" :
