@@ -1,3 +1,4 @@
+import time
 import spidev
 import RPi.GPIO as GPIO
 
@@ -19,6 +20,12 @@ CMD_MAIN_MEM_PG_BUF1_TRANSFER = "0x53 + address" # Address 0x123456 [0x12, 0x34,
 CMD_MAIN_MEM_PG_BUF2_TRANSFER = "0x55 + address"
 CMD_AUTO_PG_RW_BUF1 = "0x58 + address"
 CMD_AUTO_PG_RW_BUF2 = "0x59 + address"
+
+GPIO_TEST_LED=2 
+GPIO_MUX_SELECT=21
+GPIO_MUX_G_PIN=20
+GPIO_RECEIVE_ACK_SLAVE=16
+
 
 def address_split(address): return [ (address >> 16) & 0xFF, (address >> 8) & 0xFF, (address >> 0) & 0xFF]
 
@@ -97,6 +104,10 @@ def Read_From_File(filename):
     f.close()
     return data, len(data)
     
+def callback_from_slave(channel):
+    #print("GPIO pin {} is HIGH.".format(channel))
+    print("Received ACK from Slave")
+    GPIO.output(GPIO_MUX_SELECT, GPIO.LOW)
 
 
 def print_menu():
@@ -110,6 +121,11 @@ def print_menu():
     print("w. Write String to Address")
     print("r. Read String from Address")
     print("f. Read from file and write to Address")
+    print("TEST_LED. To Toggle MUX LED")
+    print("MUX_ENABLE. To Enable Mux")
+    print("MUX_Disable. To Disable Mux")
+    print("MUX_A. To Select Mux A")
+    print("MUX_B. To Select Mux B")
     print("q. quit")
     print("################################################################")
     print("Enter Command Choice : ")
@@ -152,17 +168,43 @@ def execute_cmd(choice):
         filename = "TEST.txt"
         data, size = Read_From_File(filename)
         Write_String_n_Bytes_Address(address, data)
+    elif choice == 'TEST_LED':
+        GPIO.output(GPIO_TEST_LED, not GPIO.input(GPIO_TEST_LED))
+    elif choice == 'MUX_A':
+        GPIO.output(GPIO_MUX_SELECT, GPIO.LOW)
+    elif choice == 'MUX_B':
+        GPIO.output(GPIO_MUX_SELECT, GPIO.HIGH)
+    elif choice == 'MUX_ENABLE': # Enable IC 
+        GPIO.output(GPIO_MUX_G_PIN, GPIO.LOW)
+        GPIO.output(GPIO_TEST_LED, GPIO.HIGH)
+    elif choice == 'MUX_DISABLE': # Disable IC 
+        GPIO.output(GPIO_MUX_G_PIN, GPIO.HIGH)
+        GPIO.output(GPIO_TEST_LED, GPIO.LOW)
+    elif choice == 'WRITE_ACK':
+        print("Enter Address in Hexa :", end='')
+        address = int(input(), 16)
+        print("Enter String data :")
+        data = input()
+        Write_String_n_Bytes_Address(address, data)
+        GPIO.output(GPIO_MUX_SELECT, GPIO.HIGH)
+
 
 
 # Set up SPI interface
 spi = spidev.SpiDev()
 spi.open(0, 0)  # SPI bus 0, device 0
-spi.max_speed_hz = 5000000  # Set SPI clock speed
+spi.max_speed_hz = 5000  # Set SPI clock speed
 spi.mode = 0b11
 
 # setup GPIO 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(8, GPIO.OUT)
+GPIO.setup(8, GPIO.OUT) 
+GPIO.setup(GPIO_MUX_G_PIN, GPIO.OUT)
+GPIO.setup(GPIO_MUX_SELECT, GPIO.OUT)
+GPIO.setup(GPIO_TEST_LED, GPIO.OUT)
+GPIO.setup(GPIO_RECEIVE_ACK_SLAVE, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+GPIO.add_event_detect(GPIO_RECEIVE_ACK_SLAVE, GPIO.RISING, callback=callback_from_slave)
 
 if __name__ == "__main__" :
 
@@ -177,34 +219,5 @@ if __name__ == "__main__" :
     GPIO.cleanup()
     spi.close()
 
-
-    # Send command to read device ID
-#command = [0x9F]  # Device ID read command
-#response = spi.xfer2(command + [0x00, 0x00, 0x00, 0x00, 0x00])  # Send command and receive 4 bytes of response
-#print("raw device ID : ", ([hex(x) for x in response]))
-
-#device_id = (response[1] << 16) | (response[2] << 8) | response[3]  # Combine response bytes into device ID
-#print("Device ID: 0x{:06X}".format(device_id))
-
-#read_status("After reading Device ID ")
-
-# Send command to write data to memory
-#command = [0x82, 0x00, 0x00, 0x00]  # Page program command and memory address
-#spi.xfer2(command)
-
-#data = [0xDE, 0xAD, 0xBE, 0xEF]  # Data to write
-#print(spi.xfer2([0x84] + data + [0x00, 0x00, 0x00])) # Send command and data
-
-#read_status("After Writing ")
-
-# Send command to read data from memory
-#command = [0x03, 0x00, 0x00, 0x00]  # Read data command and memory address
-#response = spi.xfer2(command + [0x00, 0x00, 0x00, 0x00])  # Send command and receive 4 bytes of response
-#print([hex(x) for x in response])
-
-#ead_status("After Reading ")
-
-#read_data = response[4:]  # Extract data bytes from response
-#print("Read Data: ", read_data)
 
 

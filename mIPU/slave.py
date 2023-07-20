@@ -1,4 +1,5 @@
 import spidev
+import time
 import RPi.GPIO as GPIO
 
 # Dummy Bits
@@ -19,6 +20,9 @@ CMD_MAIN_MEM_PG_BUF1_TRANSFER = "0x53 + address" # Address 0x123456 [0x12, 0x34,
 CMD_MAIN_MEM_PG_BUF2_TRANSFER = "0x55 + address"
 CMD_AUTO_PG_RW_BUF1 = "0x58 + address"
 CMD_AUTO_PG_RW_BUF2 = "0x59 + address"
+
+GPIO_SEND_ACK_MASTER=16
+GPIO_RECEIVE_ACK_MASTER=21
 
 def address_split(address): return [ (address >> 16) & 0xFF, (address >> 8) & 0xFF, (address >> 0) & 0xFF]
 
@@ -153,6 +157,15 @@ def execute_cmd(choice):
         data, size = Read_From_File(filename)
         Write_String_n_Bytes_Address(address, data)
 
+def callback_from_master(channel):
+    #print("GPIO pin {} is HIGH.".format(channel))
+    print("Received ACK from Slave")
+    choice = print_menu()
+    execute_cmd(choice)    
+    GPIO.output(GPIO_SEND_ACK_MASTER, GPIO.HIGH)
+    time.sleep(0.5)
+    GPIO.output(GPIO_SEND_ACK_MASTER, GPIO.LOW)
+
 
 # Set up SPI interface
 spi = spidev.SpiDev()
@@ -163,15 +176,21 @@ spi.mode = 0b11
 # setup GPIO 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(8, GPIO.OUT)
+GPIO.setup(GPIO_SEND_ACK_MASTER, GPIO.OUT)
+GPIO.setup(GPIO_RECEIVE_ACK_MASTER, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+
+# Add the event detection for a rising edge (from LOW to HIGH)
+GPIO.add_event_detect(GPIO_RECEIVE_ACK_MASTER, GPIO.RISING, callback=callback_from_master)
+
+
+
 
 if __name__ == "__main__" :
 
     while True:
-        choice = print_menu()
-        execute_cmd(choice)
-        
-        if choice == 'q':
-            break
+        time.sleep(1)
+
 
     # exit routine
     GPIO.cleanup()
