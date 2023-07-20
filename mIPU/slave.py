@@ -160,8 +160,12 @@ def execute_cmd(choice):
 def callback_from_master(channel):
     #print("GPIO pin {} is HIGH.".format(channel))
     print("Received ACK from Slave")
-    choice = print_menu()
-    execute_cmd(choice)    
+    while True:
+        choice = print_menu()
+        execute_cmd(choice)
+
+        if choice == 'q':
+            break    
     GPIO.output(GPIO_SEND_ACK_MASTER, GPIO.HIGH)
     time.sleep(0.5)
     GPIO.output(GPIO_SEND_ACK_MASTER, GPIO.LOW)
@@ -190,7 +194,6 @@ if __name__ == "__main__" :
 
     while True:
         time.sleep(1)
-
 
     # exit routine
     GPIO.cleanup()
