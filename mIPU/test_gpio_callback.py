@@ -7,7 +7,7 @@ def my_callback(channel):
 GPIO.setmode(GPIO.BCM)
 
 # Specify the GPIO pin you want to monitor
-gpio_pin = 17
+gpio_pin = 21 
 
 # Set up the GPIO pin as an input pin with a pull-down resistor
 GPIO.setup(gpio_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
