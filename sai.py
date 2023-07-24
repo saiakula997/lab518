@@ -4,7 +4,8 @@ import argparse
 import Adafruit_ADS1x15
 
 GAIN = (2/3)
-TIME_S = 480
+TIME_S = 15
+
 CHANNEL_COUNT = 4
 SAMPLE_FREQUENCY = (128)
 CSV_FILE_NAME = "test.csv"
@@ -22,7 +23,7 @@ pga_fsv = {
 ADC_COUNT = 1
 SENSORS_PER_ADC = 4
 TOTAL_SENSORS_COUNT = ADC_COUNT * SENSORS_PER_ADC
-SENSORS_UTILIZED = 2 #top and bottom of hand
+SENSORS_UTILIZED = 4 #top and bottom of hand
 
 ADC_CSV_FILE_NAME = "ADC_" + CSV_FILE_NAME
 VOLTAGE_CSV_FILE_NAME = "VOLTAGE_" + CSV_FILE_NAME
@@ -64,7 +65,7 @@ def convert_adc_voltage(data):
 def write_csv_file(data, file_name):
     csvfile = open(file_name, "w")
     my_write = csv.writer(csvfile, delimiter = ',')
-    my_write.writerow(['ch1', 'ch2'])
+    my_write.writerow(['ch1', 'ch2','ch3', 'ch4'])
     my_write.writerows(data)
     print("Created file", file_name)
 
@@ -73,6 +74,7 @@ write_csv_file(data, ADC_CSV_FILE_NAME)
 
 v_data = convert_adc_voltage(data)
 write_csv_file(v_data, VOLTAGE_CSV_FILE_NAME)
+
 
 
 
