@@ -1,7 +1,7 @@
 import socket
 
 # Set the IP address and port of the server (RPI)
-server_ip = "RPI_IP_ADDRESS"  # Replace with the actual IP address of your RPI
+server_ip = "10.0.0.3"  # Replace with the actual IP address of your RPI
 server_port = 12345  # Use the same port as in the server
 
 # Create a socket object
