@@ -8,7 +8,7 @@ SAMPLES_COUNT = 6
 GAIN = (2/3)
 
 # Set the IP address and port of the server (RPI)
-server_ip = "192.168.86.241"  # Replace with the actual IP address of your RPI
+server_ip = "10.0.0.3"  # Replace with the actual IP address of your RPI
 server_port = 12345  # Use the same port as in the server
 
 pga_fsv = { 
@@ -76,7 +76,7 @@ def main():
             data, v_data =  get_data(client_socket)
             file_name = name+"/ADC_sample_"+str(i)+".csv"
             write_into_file(data, file_name)
-            file_name = name+"/ADC_sample_"+str(i)+".csv"
+            file_name = name+"/VOLTAGE_sample_"+str(i)+".csv"
             write_into_file(v_data, file_name)
         print("Done")
     # Close the connection
