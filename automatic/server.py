@@ -47,7 +47,7 @@ def process_requests(client_socket):
             data = dot_sensor.get_readings()
             data = pickle.dumps(data)
             size = len(data)
-            print(data, size)
+            # print(data, size)
             send_data(data, size, client_socket)
         else :
             print("Invalid Request from Client")
@@ -60,7 +60,10 @@ def main():
     print("Server : Sockect Created")
     client_socket, server_socket = connect_client(server_socket)
     print("Server : Connected to Client")
-    process_requests(client_socket)
+    try:
+        process_requests(client_socket)
+    except Exception as error:
+        print("Check the error case", error)
     # Close the connection
     client_socket.close()
     server_socket.close()
