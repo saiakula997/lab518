@@ -2,6 +2,8 @@ import os
 import csv
 import socket
 import pickle
+import camera
+import threading
 
 # number of samples to be collected per subject
 SAMPLES_COUNT = 6
@@ -60,24 +62,33 @@ def write_into_file(data, file_name):
     my_write.writerow(['ch1', 'ch2','ch3', 'ch4'])
     my_write.writerows(data)
 
+def dot_data_collection(name, count, client_socket):
+    data, v_data =  get_data(client_socket)
+    print("------- dot_data_collection --------")
+    file_name = name+"/ADC_sample_"+str(count)+".csv"
+    write_into_file(data, file_name)
+    file_name = name+"/VOLTAGE_sample_"+str(count)+".csv"
+    write_into_file(v_data, file_name)
+
 def main():
     client_socket = client_request_connect()
     while True:
-        name = input("Enter Subject Name : ")
+        name = input("Enter q or Subject Name : ")
         if name == "q":
             break
         try:
             os.mkdir(name)
         except:
             print("Invalid Name or Folder Alredy Exists ", name)
-        for i in  range(SAMPLES_COUNT):
-            enter = "Hit Enter to Collect Sample " + str(i)
+        for count in  range(SAMPLES_COUNT):
+            enter = "Hit Enter to Collect Sample " + str(count)
             _ = input(enter)
-            data, v_data =  get_data(client_socket)
-            file_name = name+"/ADC_sample_"+str(i)+".csv"
-            write_into_file(data, file_name)
-            file_name = name+"/VOLTAGE_sample_"+str(i)+".csv"
-            write_into_file(v_data, file_name)
+            t1 = threading.Thread(target=camera.StartCamera, args=(name,))
+            t2 = threading.Thread(target=dot_data_collection, args=(name,count, client_socket))
+            t1.start()
+            t2.start()
+            t1.join()
+            t2.join()
         print("Done")
     # Close the connection
     client_socket.close()
