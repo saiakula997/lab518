@@ -6,7 +6,7 @@ import camera
 import threading
 
 # number of samples to be collected per subject
-SAMPLES_COUNT = 6
+SAMPLES_COUNT = 1
 GAIN = (2/3)
 
 # Set the IP address and port of the server (RPI)
@@ -83,8 +83,8 @@ def main():
         for count in  range(SAMPLES_COUNT):
             enter = "Hit Enter to Collect Sample " + str(count)
             _ = input(enter)
-            t1 = threading.Thread(target=camera.StartCamera, args=(name,))
-            t2 = threading.Thread(target=dot_data_collection, args=(name,count, client_socket))
+            t1 = threading.Thread(target=camera.StartCamera, args=(name, count))
+            t2 = threading.Thread(target=dot_data_collection, args=(name, count, client_socket))
             t1.start()
             t2.start()
             t1.join()
