@@ -10,7 +10,7 @@ SAMPLES_COUNT = 1
 GAIN = (2/3)
 
 # Set the IP address and port of the server (RPI)
-server_ip = "10.0.0.3"  # Replace with the actual IP address of your RPI
+server_ip = "172.16.0.5"  # Replace with the actual IP address of your RPI
 server_port = 12345  # Use the same port as in the server
 
 pga_fsv = { 
@@ -78,13 +78,18 @@ def main():
             break
         try:
             os.mkdir(name)
+            dot_name = name+"/dot/"
+            images_name = name+"/images/"
+            os.mkdir(dot_name)
+            os.mkdir(images_name)
+
         except:
             print("Invalid Name or Folder Alredy Exists ", name)
         for count in  range(SAMPLES_COUNT):
             enter = "Hit Enter to Collect Sample " + str(count)
             _ = input(enter)
-            t1 = threading.Thread(target=camera.StartCamera, args=(name, count))
-            t2 = threading.Thread(target=dot_data_collection, args=(name, count, client_socket))
+            t1 = threading.Thread(target=camera.StartCamera, args=(images_name, count))
+            t2 = threading.Thread(target=dot_data_collection, args=(dot_name, count, client_socket))
             t1.start()
             t2.start()
             t1.join()
