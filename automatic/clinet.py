@@ -10,7 +10,7 @@ SAMPLES_COUNT = 1
 GAIN = (2/3)
 
 # Set the IP address and port of the server (RPI)
-server_ip = "172.16.0.5"  # Replace with the actual IP address of your RPI
+server_ip = "192.168.1.3"  # Replace with the actual IP address of your RPI
 server_port = 12345  # Use the same port as in the server
 
 pga_fsv = { 
@@ -88,6 +88,10 @@ def main():
         for count in  range(SAMPLES_COUNT):
             enter = "Hit Enter to Collect Sample " + str(count)
             _ = input(enter)
+            images_name += str(count)
+            dot_name += str(count)
+            os.mkdir(images_name)
+            os.mkdir(dot_name)
             t1 = threading.Thread(target=camera.StartCamera, args=(images_name, count))
             t2 = threading.Thread(target=dot_data_collection, args=(dot_name, count, client_socket))
             t1.start()
