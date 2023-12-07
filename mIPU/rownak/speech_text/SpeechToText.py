@@ -2,6 +2,7 @@ import os
 import wave
 import json
 import argparse
+import paho.mqtt.client as mqtt
 from vosk import Model, KaldiRecognizer
 
 parser = argparse.ArgumentParser(description ='Provide some wav file')
@@ -42,15 +43,30 @@ def get_text_from_voice(audio_file_path, model_path, output_file):
         txt_str = text_lst[-1]
     else:
         txt_str = ''
+    
+    client.publish("SPEECH_TO_TEXT", json.dumps(text_lst))
 
     with open(output_file, "w") as output:
         for text in text_lst:
             output.write(text + "\n")
 
-    return txt_str
+    return text_lst
 
-audio_file_path = r"/home/lab518/Rownak/project/audios/record.wav"
-model_path = r"/home/lab518/Rownak/project/vosk-model-small-en-us-0.15"
-output_file = r"/home/lab518/Rownak/project/Transcription.txt"
-result = get_text_from_voice(args.file, model_path, output_file)
-print("Transcription Result:", result)
+def on_connect(client, userdata, flags, rc):
+    print("Connected to MQTT Broker with result code " + str(rc))
+    client.subscribe("none")
+
+def on_message(client, userdata, msg):
+    message = json.loads(msg.payload)
+    print("Received message Req: " + message)
+    
+if __name__ == "__main__":
+    client = mqtt.Client()
+    client.on_connect = on_connect
+    client.on_message = on_message
+    client.connect("localhost", 1883, 60) 
+    audio_file_path = r"/home/lab518/Rownak/project/audios/record.wav"
+    model_path = r"/home/lab518/Rownak/project/vosk-model-small-en-us-0.15"
+    output_file = r"/home/lab518/Rownak/project/Transcription.txt"
+    result = get_text_from_voice(args.file, model_path, output_file)
+    print("Transcription Result:", result)
