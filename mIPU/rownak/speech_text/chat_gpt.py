@@ -16,9 +16,10 @@ def main():
     client = mqtt.Client()
     client.on_connect = on_connect
     client.on_message = on_message
-    client.connect("localhost", 1883, 60)
+    client.connect("10.0.0.5", 1883, 60)
 
     client.loop_forever()
 
 if __name__ == "__main__":
     main()
+

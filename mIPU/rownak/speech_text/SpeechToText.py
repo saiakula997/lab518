@@ -44,7 +44,7 @@ def get_text_from_voice(audio_file_path, model_path, output_file):
     else:
         txt_str = ''
     
-    client.publish("SPEECH_TO_TEXT", json.dumps(text_lst))
+    client.publish("SPEECH_TO_TEXT", json.dumps(txt_str))
 
     with open(output_file, "w") as output:
         for text in text_lst:
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     client = mqtt.Client()
     client.on_connect = on_connect
     client.on_message = on_message
-    client.connect("localhost", 1883, 60) 
+    client.connect("10.0.0.5", 1883, 60) 
     audio_file_path = r"/home/lab518/Rownak/project/audios/record.wav"
     model_path = r"/home/lab518/Rownak/project/vosk-model-small-en-us-0.15"
     output_file = r"/home/lab518/Rownak/project/Transcription.txt"
