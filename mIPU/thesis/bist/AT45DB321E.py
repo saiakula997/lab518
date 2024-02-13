@@ -79,6 +79,7 @@ def Erase_Write_n_Bytes_Address(address, data):
 def Read_String_n_Bytes_Address(address, n):
     data = Read_n_Bytes_Address(address, n)
     print(">> String Read : ", ''.join([chr(x) for x in data]))
+    return ''.join([chr(x) for x in data])
     
 def Write_String_n_Bytes_Address(address, data):
     data = [ord(x) for x in data]
@@ -96,118 +97,14 @@ def Read_From_File(filename):
     data = f.read()
     f.close()
     return data, len(data)
-    
 
-
-def print_menu():
-    print("################################################################")
-    print("1. Get Status Register")
-    print("2. Erase and write from Address")
-    print("3. Read 'n' Bytes from Address")
-    print("4. Write into multiple pages")
-    print("5. Read from multiple pages")
-    print("6. Get Device ID(s)")
-    print("w. Write String to Address")
-    print("r. Read String from Address")
-    print("f. Read from file and write to Address")
-    print("q. quit")
-    print("################################################################")
-    print("Enter Command Choice : ")
-    choice = input()
-    return choice
-
-def execute_cmd(choice):
-    if choice == '1':
-        Print_Status_Register()
-    elif choice == '2':
-        print("Enter Address in Hexa :", end='')
-        address = int(input(), 16)
-        Erase_Write_Address(address, [0x1A, 0x1B, 0x1C, 0x1D, 0x1E])
-    elif choice == '3':
-        print("Enter Address in Hexa :", end='')
-        address = int(input(), 16)
-        print("Enter Number of Bytes to Read :", end='')
-        n = int(input())
-        print([hex(x) for x in Read_n_Bytes_Address(address, n)])
-    elif choice == '4':
-        print("Enter Address in Hexa :", end='')
-        address = int(input(), 16)
-    elif choice == 'w':
-        print("Enter Address in Hexa :", end='')
-        address = int(input(), 16)
-        print("Enter String data :")
-        data = input()
-        Write_String_n_Bytes_Address(address, data)
-    elif choice == 'r':
-        print("Enter Address in Hexa :", end='')
-        address = int(input(), 16)
-        print("Enter Number of Bytes to Read :", end='')
-        n = int(input())
-        data = Read_String_n_Bytes_Address(address, n)
-    elif choice == '6':
-        print(Get_Device_ID())
-    elif choice == 'f':
-        print("Enter Address in Hexa :", end='')
-        address = int(input(), 16)
-        filename = "TEST.txt"
-        data, size = Read_From_File(filename)
-        Write_String_n_Bytes_Address(address, data)
-
-
-# Set up SPI interface
 spi = spidev.SpiDev()
-spi.open(0, 0)  # SPI bus 0, device 0
-spi.max_speed_hz = 5000000  # Set SPI clock speed
-spi.mode = 0b11
+def init():
+    # Set up SPI interface
+    spi.open(0, 0)  # SPI bus 0, device 0
+    spi.max_speed_hz = 5000000  # Set SPI clock speed
+    spi.mode = 0b11
 
-# setup GPIO 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(8, GPIO.OUT)
-
-if __name__ == "__main__" :
-
-    while True:
-        choice = print_menu()
-        execute_cmd(choice)
-        
-        if choice == 'q':
-            break
-
-    # exit routine
-    GPIO.cleanup()
-    spi.close()
-
-
-    # Send command to read device ID
-#command = [0x9F]  # Device ID read command
-#response = spi.xfer2(command + [0x00, 0x00, 0x00, 0x00, 0x00])  # Send command and receive 4 bytes of response
-#print("raw device ID : ", ([hex(x) for x in response]))
-
-#device_id = (response[1] << 16) | (response[2] << 8) | response[3]  # Combine response bytes into device ID
-#print("Device ID: 0x{:06X}".format(device_id))
-
-#read_status("After reading Device ID ")
-
-# Send command to write data to memory
-#command = [0x82, 0x00, 0x00, 0x00]  # Page program command and memory address
-#spi.xfer2(command)
-
-#data = [0xDE, 0xAD, 0xBE, 0xEF]  # Data to write
-#print(spi.xfer2([0x84] + data + [0x00, 0x00, 0x00])) # Send command and data
-
-#read_status("After Writing ")
-
-# Send command to read data from memory
-#command = [0x03, 0x00, 0x00, 0x00]  # Read data command and memory address
-#response = spi.xfer2(command + [0x00, 0x00, 0x00, 0x00])  # Send command and receive 4 bytes of response
-#print([hex(x) for x in response])
-
-#ead_status("After Reading ")
-
-#read_data = response[4:]  # Extract data bytes from response
-#print("Read Data: ", read_data)
-
-
-
-
-
+    # setup GPIO 
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(8, GPIO.OUT)
