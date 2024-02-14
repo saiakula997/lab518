@@ -10,3 +10,6 @@ def init():
     GPIO.setup(GPIO_8_SPI_CS, GPIO.OUT)
     GPIO.setup(GPIO_2_MUX_A, GPIO.OUT)
     GPIO.setup(GPIO_3_MUX_B, GPIO.OUT)
+
+def deinit():
+    GPIO.cleanup()

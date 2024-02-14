@@ -104,3 +104,6 @@ def init():
     spi.open(0, 0)  # SPI bus 0, device 0
     spi.max_speed_hz = 5000000  # Set SPI clock speed
     spi.mode = 0b11
+
+def deinit():
+    spi.close()    
