@@ -2,8 +2,8 @@ import time
 import json
 import string
 import random
-import pin_mux
-import sn54hc153_mux as mux
+import gpio
+import sn54hc153_mux as bus_controller
 import AT45DB321E as ext_mem
 
 def get_project_config():
@@ -13,12 +13,18 @@ def gen_random_string(length=16):
     characters = string.ascii_letters + string.digits + string.punctuation
     return ''.join(random.choice(characters) for i in range(length))
 
+def callback_from_slave_1():
+    print("callback_from_slave_1")
+
+def callback_from_slave_2():
+    print("callback_from_slave_2")
+
 if __name__ == "__main__":
-    pin_mux.init()
+    gpio.init("MASTER")
     ext_mem.init()
     prj_conf = get_project_config()
 
-    mux.select_master()
+    bus_controller.select_master()
     random_string = gen_random_string()
     ext_mem.Write_String_n_Bytes_Address(prj_conf["SLAVE_1_INPUT_ADDR"], random_string)
     time.sleep(1)
@@ -27,7 +33,7 @@ if __name__ == "__main__":
     print("string_read : ", string_read)
     assert string_read == random_string, "string_read is not equal to random_string"
 
-    mux.select_master()
+    bus_controller.select_master()
     random_string = gen_random_string()
     ext_mem.Write_String_n_Bytes_Address(prj_conf["SLAVE_2_INPUT_ADDR"], random_string)
     time.sleep(1)
@@ -36,7 +42,7 @@ if __name__ == "__main__":
     print("string_read : ", string_read)
     assert string_read == random_string, "string_read is not equal to random_string"
 
-    mux.select_master()
+    bus_controller.select_master()
     random_string = gen_random_string()
     ext_mem.Write_String_n_Bytes_Address(prj_conf["SLAVE_2_OUTPUT_ADDR"], random_string)
     time.sleep(1)
@@ -45,7 +51,11 @@ if __name__ == "__main__":
     print("string_read : ", string_read)
     assert string_read == random_string, "string_read is not equal to random_string"
 
-    pin_mux.deinit()
+    bus_controller.select_slave_1()
+    gpio.signal_slave_1()
+    time.sleep(10)
+    
+    gpio.deinit()
     ext_mem.deinit()
 
 
