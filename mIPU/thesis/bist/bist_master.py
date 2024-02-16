@@ -51,8 +51,8 @@ if __name__ == "__main__":
     print("string_read : ", string_read)
     assert string_read == random_string, "string_read is not equal to random_string"
 
-    bus_controller.select_slave_1()
-    gpio.signal_slave_1()
+    bus_controller.select_slave_2()
+    gpio.signal_slave_2()
     time.sleep(30)
     
     gpio.deinit()
