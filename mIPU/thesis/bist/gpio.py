@@ -52,9 +52,9 @@ def ack_slave_1():
     GPIO.output(GPIO_ACK_SLAVE_1, GPIO.LOW)
 
 def ack_slave_2():
-    GPIO.output(GPIO_ACK_SLAVE_1, GPIO.HIGH)
+    GPIO.output(GPIO_ACK_SLAVE_2, GPIO.HIGH)
     time.sleep(0.5)
-    GPIO.output(GPIO_ACK_SLAVE_1, GPIO.LOW)
+    GPIO.output(GPIO_ACK_SLAVE_2, GPIO.LOW)
 
 def deinit():
     GPIO.cleanup()
