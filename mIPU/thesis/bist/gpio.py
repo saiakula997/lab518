@@ -5,9 +5,9 @@ GPIO_2_MUX_A=2
 GPIO_3_MUX_B=3
 GPIO_8_SPI_CS=8
 GPIO_SIG_SLAVE_1=14
-GPIO_ACK_SLAVE_2=15
-GPIO_ACK_SLAVE_1=20
-GPIO_SIG_SLAVE_2=21
+GPIO_ACK_SLAVE_1=15
+GPIO_SIG_SLAVE_2=20
+GPIO_ACK_SLAVE_2=21
 
 def init(device=None):
     # Set up GPIO mode
@@ -18,8 +18,8 @@ def init(device=None):
         from bist_master import callback_from_slave_1, callback_from_slave_2
         GPIO.setup(GPIO_2_MUX_A, GPIO.OUT)
         GPIO.setup(GPIO_3_MUX_B, GPIO.OUT)
-        GPIO.add_event_detect(GPIO_SIG_SLAVE_1, GPIO.RISING, callback=callback_from_slave_1)
-        GPIO.add_event_detect(GPIO_SIG_SLAVE_2, GPIO.RISING, callback=callback_from_slave_2)
+        GPIO.add_event_detect(GPIO_ACK_SLAVE_1, GPIO.RISING, callback=callback_from_slave_1)
+        GPIO.add_event_detect(GPIO_ACK_SLAVE_2, GPIO.RISING, callback=callback_from_slave_2)
 
     elif device == "SLAVE":
         from bist_slave import callback_fun
