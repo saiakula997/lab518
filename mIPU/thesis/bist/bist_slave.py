@@ -26,7 +26,7 @@ def slave_ack_master():
 
 def callback_fun(channel):
     print("Received Signal from Master")
-
+    prj_conf = get_project_config()
     random_string = gen_random_string()
     ext_mem.Write_String_n_Bytes_Address(prj_conf[SLAVE_INPUT_ADDR], random_string)
     time.sleep(1)
@@ -48,8 +48,7 @@ def callback_fun(channel):
 if __name__ == "__main__":
     gpio.init("SLAVE")
     ext_mem.init()
-    prj_conf = get_project_config()
-    
+
     time.sleep(30)
 
     gpio.deinit()
