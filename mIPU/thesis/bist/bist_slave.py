@@ -24,7 +24,7 @@ def slave_ack_master():
     ack = { "1" : gpio.ack_slave_1, "2" : gpio.ack_slave_2 }[SLAVE_ID]
     ack()
 
-def callback_fun():
+def callback_fun(channel):
     print("Received Signal from Master")
 
     random_string = gen_random_string()

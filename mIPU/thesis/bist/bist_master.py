@@ -13,10 +13,10 @@ def gen_random_string(length=16):
     characters = string.ascii_letters + string.digits + string.punctuation
     return ''.join(random.choice(characters) for i in range(length))
 
-def callback_from_slave_1():
+def callback_from_slave_1(channel):
     print("callback_from_slave_1")
 
-def callback_from_slave_2():
+def callback_from_slave_2(channel):
     print("callback_from_slave_2")
 
 if __name__ == "__main__":
