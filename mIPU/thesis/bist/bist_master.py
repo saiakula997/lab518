@@ -55,6 +55,10 @@ if __name__ == "__main__":
     gpio.signal_slave_2()
     time.sleep(30)
     
+    bus_controller.select_slave_1()
+    gpio.signal_slave_1()
+    time.sleep(30)
+
     gpio.deinit()
     ext_mem.deinit()
 
