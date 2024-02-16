@@ -50,3 +50,8 @@ if __name__ == "__main__":
     ext_mem.init()
     prj_conf = get_project_config()
     
+    time.sleep(30)
+
+    gpio.deinit()
+    ext_mem.deinit()
+    
