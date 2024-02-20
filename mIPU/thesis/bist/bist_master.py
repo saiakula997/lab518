@@ -5,7 +5,6 @@ import random
 import gpio
 import sn54hc153_mux as bus_controller
 import AT45DB321E as ext_mem
-prj_conf = 0
 
 def get_project_config():
     return json.load(open("ext_mem_config.json"))
@@ -95,10 +94,11 @@ def process(choice):
         print('Read from external memory at : ', prj_conf['SLAVE_2_OUTPUT_ADDR'])
         ext_mem.Read_String_n_Bytes_Address(prj_conf['SLAVE_2_OUTPUT_ADDR'], 16)
 
+prj_conf = get_project_config()
 if __name__ == "__main__":
     gpio.init("MASTER")
     ext_mem.init()
-    prj_conf = get_project_config()
+    
 
     bus_controller.select_master()
     random_string = gen_random_string()
