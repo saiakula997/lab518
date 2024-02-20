@@ -43,15 +43,15 @@ def print_menu():
     return input()
 
 def process(choice):
-    if(choice == 1):
+    if(choice == '1'):
         gpio.signal_slave_1()
-    elif(choice == 2):
+    elif(choice == '2'):
         gpio.signal_slave_2()
-    elif(choice == 3):
+    elif(choice == '3'):
         bus_controller.select_slave_1()
-    elif(choice == 4):
+    elif(choice == '4'):
         bus_controller.select_slave_2()
-    elif(choice == 5):
+    elif(choice == '5'):
         print('5. Enter Input to Slave-1')
         print('Bus controller select Master')
         bus_controller.select_master()
@@ -66,7 +66,7 @@ def process(choice):
         gpio.signal_slave_1()
 
         print('Wait for Ack from slave-1')
-    elif(choice == 6):
+    elif(choice == '6'):
         print('6. Enter Input to Slave-2')
         print('Bus controller select Master')
         bus_controller.select_master()
@@ -81,13 +81,13 @@ def process(choice):
         gpio.signal_slave_2()
 
         print('Wait for Ack from slave-2')
-    elif(choice == 7):
+    elif(choice == '7'):
         print('7. Output from Slave-1')
         print('Bus controller select Master')
         bus_controller.select_master()
         print('Read from external memory at : ', prj_conf['SLAVE_1_OUTPUT_ADDR'])
         ext_mem.Read_String_n_Bytes_Address(prj_conf['SLAVE_1_OUTPUT_ADDR'], 16)
-    elif(choice == 8):
+    elif(choice == '8'):
         print('8. Output from Slave-2')
         print('Bus controller select Master')
         bus_controller.select_master()
@@ -137,7 +137,7 @@ if __name__ == "__main__":
 
     while(True):
         print("Enter your choice : ")
-        choice = print_menu
+        choice = print_menu()
         process(choice)
 
     gpio.deinit()
