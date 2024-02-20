@@ -49,7 +49,8 @@ if __name__ == "__main__":
     gpio.init("SLAVE")
     ext_mem.init()
 
-    time.sleep(30)
+    while(True):
+        time.sleep(30)
 
     gpio.deinit()
     ext_mem.deinit()
