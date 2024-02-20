@@ -5,6 +5,7 @@ import random
 import gpio
 import sn54hc153_mux as bus_controller
 import AT45DB321E as ext_mem
+prj_conf = 0
 
 def get_project_config():
     return json.load(open("ext_mem_config.json"))
@@ -14,6 +15,7 @@ def gen_random_string(length=16):
     return ''.join(random.choice(characters) for i in range(length))
 
 def callback_from_slave_1(channel):
+    global prj_conf
     print("callback_from_slave_1")
     print('Bus controller select Master')
     bus_controller.select_master()
@@ -21,6 +23,7 @@ def callback_from_slave_1(channel):
     ext_mem.Read_String_n_Bytes_Address(prj_conf['SLAVE_1_OUTPUT_ADDR'], 16)
 
 def callback_from_slave_2(channel):
+    global prj_conf
     print("callback_from_slave_2")
     print('Bus controller select Master')
     bus_controller.select_master()
