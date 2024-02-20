@@ -129,11 +129,11 @@ if __name__ == "__main__":
 
     bus_controller.select_slave_2()
     gpio.signal_slave_2()
-    time.sleep(30)
+    time.sleep(5)
     
     bus_controller.select_slave_1()
     gpio.signal_slave_1()
-    time.sleep(30)
+    time.sleep(5)
 
     while(True):
         choice = print_menu
