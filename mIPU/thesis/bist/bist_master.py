@@ -40,7 +40,7 @@ def print_menu():
     print('7. Output from Slave-1')
     print('8. Output from Slave-2')
     print('##############################################')
-    return input("Enter your choice : ")
+    return input()
 
 def process(choice):
     if(choice == 1):
@@ -136,6 +136,7 @@ if __name__ == "__main__":
     time.sleep(5)
 
     while(True):
+        print("Enter your choice : ")
         choice = print_menu
         process(choice)
 
