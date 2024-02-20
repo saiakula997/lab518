@@ -45,14 +45,16 @@ def print_menu():
     return input()
 
 def process(choice):
-    if(choice == '1'):
-        gpio.signal_slave_1()
-    elif(choice == '2'):
-        gpio.signal_slave_2()
-    elif(choice == '3'):
+    if(choice == '0'):
+        bus_controller.select_master()
+    elif(choice == '1'):
         bus_controller.select_slave_1()
-    elif(choice == '4'):
+    elif(choice == '2'):
         bus_controller.select_slave_2()
+    elif(choice == '3'):
+        gpio.signal_slave_1()
+    elif(choice == '4'):
+        gpio.signal_slave_2()
     elif(choice == '5'):
         print('5. Enter Input to Slave-1')
         print('Bus controller select Master')
