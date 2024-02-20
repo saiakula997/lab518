@@ -39,6 +39,7 @@ def print_menu():
     print('6. Enter Input to Slave-2')
     print('7. Output from Slave-1')
     print('8. Output from Slave-2')
+    print('q. Quit')
     print('##############################################')
     return input()
 
@@ -139,6 +140,8 @@ if __name__ == "__main__":
         print("Enter your choice : ")
         choice = print_menu()
         process(choice)
+        if choice == 'q':
+            break
 
     gpio.deinit()
     ext_mem.deinit()
