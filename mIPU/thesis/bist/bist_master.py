@@ -31,10 +31,11 @@ def callback_from_slave_2(channel):
 
 def print_menu():
     print('##############################################')
-    print('1. Signal Slave-1')
-    print('2. Signal Slave-2')
-    print('3. Select Slave-1')
-    print('4. Select Slave-2')
+    print('0. Select Master')
+    print('1. Select Slave-1')
+    print('2. Select Slave-2')
+    print('3. Signal Slave-1')
+    print('4. Signal Slave-2')
     print('5. Enter Input to Slave-1')
     print('6. Enter Input to Slave-2')
     print('7. Output from Slave-1')
