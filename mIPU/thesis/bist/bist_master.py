@@ -3,6 +3,7 @@ import json
 import string
 import random
 import gpio
+import csv
 import sn54hc153_mux as bus_controller
 import AT45DB321E as ext_mem
 
@@ -28,6 +29,13 @@ def callback_from_slave_2(channel):
     bus_controller.select_master()
     print('Read from external memory at : ', prj_conf['SLAVE_2_OUTPUT_ADDR'])
     ext_mem.Read_String_n_Bytes_Address(prj_conf['SLAVE_2_OUTPUT_ADDR'], 16)
+
+def create_buffer(data):
+  json_bytes = json.dumps(data).encode('utf-8')
+  data_size = len(json_bytes)
+  buffer = bytearray(data_size.to_bytes(4, byteorder='big'))
+  buffer.extend(json_bytes)
+  return buffer
 
 def print_menu():
     print('##############################################')

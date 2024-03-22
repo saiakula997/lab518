@@ -1,0 +1,42 @@
+# Covid-datapipeline-using-pyspark-and-mysql
+Created covid data pipeline using PySpark and MySQL that collected data stream from API and do some processing and store it into MYSQL database.
+
+### Tools used :  PySpark , MySQL 
+
+### Procedure 
+
+1) Fetch latest data from API using requests & pandas module of python.
+
+2) Apply some data processing and filtering to generate summarized information.
+
+3) Store that summarized information into database using MySQL.
+
+To build above pipeline i had used pyspark
+
+
+### {IMPORTANT}
+
+Before move to the execution part please read below sentences
+
+- Use correct connector and drivername while making connection with MySQL db if you are going to use different db then procedure may differ. 
+
+- change login credentials (username & password) in covid-config.json.
+
+- Make sure that mentioned database and table is already created. 
+
+
+
+### How to use
+
+1) clone **Covid-datapipeline-using-pyspark-and-mysql** repo.
+
+2) start MySQL server 
+
+3) execute following command
+
+```
+  python main.py
+```
+
+
+
