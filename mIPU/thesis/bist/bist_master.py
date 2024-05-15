@@ -48,6 +48,8 @@ def print_menu():
     print('6. Enter Input to Slave-2')
     print('7. Output from Slave-1')
     print('8. Output from Slave-2')
+    print('w. Write Image data to address')
+    print('r. Read Image data from address')
     print('q. Quit')
     print('##############################################')
     return input()
@@ -105,6 +107,22 @@ def process(choice):
         bus_controller.select_master()
         print('Read from external memory at : ', prj_conf['SLAVE_2_OUTPUT_ADDR'])
         ext_mem.Read_String_n_Bytes_Address(prj_conf['SLAVE_2_OUTPUT_ADDR'], 16)
+    elif(choice == 'w'):
+        image_name = input('Enter Image name :')
+        address = int(input("Enter address :"), 16)
+        f = open(image_name, mode="rb")
+        data = f.read()
+        f.close()
+        ext_mem.Erase_Write_n_Bytes_Address(address, data)
+    elif(choice == 'r'):
+        address = int(input("Enter address :"), 16)
+        n = int(input('Enter number of bytes :'))
+        data = ext_mem.Read_n_Bytes_Address(address, n)
+        output_image = "verify.png"
+        f = open(output_image, 'wb')
+        f.write(data)
+        f.close()
+        print("Image Re-Written into", output_image)
 
 prj_conf = get_project_config()
 if __name__ == "__main__":
