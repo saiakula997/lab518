@@ -5,6 +5,7 @@ import random
 import argparse
 import gpio
 import AT45DB321E as ext_mem
+import mnist_model
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--slave', type=str, required=True)
@@ -26,7 +27,7 @@ def slave_ack_master():
 
 def callback_fun(channel):
     print("Received Signal from Master")
-    prj_conf = get_project_config()
+    
     random_string = gen_random_string()
     ext_mem.Write_String_n_Bytes_Address(prj_conf[SLAVE_INPUT_ADDR], random_string)
     time.sleep(1)
@@ -45,12 +46,34 @@ def callback_fun(channel):
 
     slave_ack_master()
 
+def print_menu():
+    print('##############################################')
+    print('r. Read n Bytes from Slave-{0} Input'.format(SLAVE_ID))
+    print('w. Write n Bytes to Slave-{0} Output'.format(SLAVE_ID))
+    print('q. Quit')
+    print('##############################################')
+    
+
+def process_input(choice):
+    if choice == 'r':
+        print("Enter Number of Bytes to Read :", end='')
+        n = int(input())
+        data = ext_mem.Read_n_Bytes_Address(prj_conf[SLAVE_INPUT_ADDR], n)
+        print("Sending Input data to model")
+        mnist_model.model(data)
+    
+
 if __name__ == "__main__":
     gpio.init("SLAVE")
     ext_mem.init()
-
+    prj_conf = get_project_config()
+    time.sleep(5)
     while(True):
-        time.sleep(30)
+        choice = input("Enter your choice :")
+        print_menu()
+        process_input(choice)
+        if choice == 'q':
+            break
 
     gpio.deinit()
     ext_mem.deinit()
