@@ -1,0 +1,42 @@
+Time Taken [gpio.init]  38158712
+Time Taken [ext_mem.init]  117107
+Time Taken [bus_controller.select_master]  19685
+0 [109, 115, 34, 51, 40, 33, 82, 42, 66, 62, 48, 65, 106, 106, 110, 101]
+Time Taken [ext_mem.Write_String_n_Bytes_Address]  265213
+>> String Read :  ms"3(!R*B>0Ajjne
+Time Taken [ext_mem.Read_String_n_Bytes_Address]  168049
+random_string :  ms"3(!R*B>0Ajjne
+string_read :  ms"3(!R*B>0Ajjne
+Time Taken [bus_controller.select_master]  13610
+65536 [60, 61, 67, 97, 51, 68, 58, 119, 77, 38, 70, 118, 56, 67, 79, 93]
+Time Taken [ext_mem.Write_String_n_Bytes_Address]  104737
+>> String Read :  <=Ca3D:wM&Fv8CO]
+Time Taken [ext_mem.Read_String_n_Bytes_Address]  124700
+random_string :  <=Ca3D:wM&Fv8CO]
+string_read :  <=Ca3D:wM&Fv8CO]
+Time Taken [bus_controller.select_master]  8592
+196608 [46, 39, 96, 126, 63, 99, 91, 74, 116, 89, 103, 116, 55, 90, 79, 43]
+Time Taken [ext_mem.Write_String_n_Bytes_Address]  98645
+>> String Read :  .'`~?c[JtYgt7ZO+
+Time Taken [ext_mem.Read_String_n_Bytes_Address]  142550
+random_string :  .'`~?c[JtYgt7ZO+
+string_read :  .'`~?c[JtYgt7ZO+
+Time Taken [bus_controller.select_slave_2]  13314
+Time Taken [gpio.signal_slave_2]  500573072
+Time Taken [bus_controller.select_slave_1]  44035
+Time Taken [gpio.signal_slave_1]  500592563
+Enter your choice : 
+##############################################
+0. Select Master
+1. Select Slave-1
+2. Select Slave-2
+3. Signal Slave-1
+4. Signal Slave-2
+5. Enter Input to Slave-1
+6. Enter Input to Slave-2
+7. Output from Slave-1
+8. Output from Slave-2
+w. Write Image data to address
+r. Read Image data from address
+q. Quit
+##############################################
