@@ -1,0 +1,17 @@
+Time Taken for GPIO Initilization Hardware Setup = 36489587
+Time Taken for Shared memory Init = 92711
+Time Taken for Bus COntroller = 16750
+Time Taken for Writing to External Memory = 209690
+Time Taken to Read from External Memory = 158330
+Time Taken for Selecting Master = 12500
+Time Taken for Writing to External Memory = 103730
+Time Taken to Read from External Memory = 128952
+Time Taken for Selecting Master = 9491
+Time Taken for Writing to External Memory = 96749
+Time Taken to Read from External Memory = 130775
+Time Taken for Selecting Slave-2 = 11963
+Time Taken for Signaling Slave-2 = 500571639
+Time Taken for Selecting Slave-1 = 44851
+Time Taken for Signaling Slave-1 = 500595014
+Time Taken for GPIO De-Init = 1061017
+Time Taken for Shared memory Init = 67259
