@@ -5,7 +5,7 @@ import random
 import argparse
 import gpio
 import AT45DB321E as ext_mem
-import mnist_model
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--slave', type=str, required=True)
@@ -48,8 +48,9 @@ def callback_fun(channel):
 
 def print_menu():
     print('##############################################')
-    print('r. Read n Bytes from Slave-{0} Input'.format(SLAVE_ID))
-    print('w. Write n Bytes to Slave-{0} Output'.format(SLAVE_ID))
+    print('r. Read n Bytes String Slave-{0} Input'.format(SLAVE_ID))
+    print('w. Write n Bytes String to Slave-{0} Output'.format(SLAVE_ID))
+    print('i. Read n Bytes Image from Slave-{0} and Process'.format(SLAVE_ID))
     print('q. Quit')
     print('##############################################')
     
@@ -58,10 +59,16 @@ def process_input(choice):
     if choice == 'r':
         print("Enter Number of Bytes to Read :", end='')
         n = int(input())
+        data = ext_mem.Read_String_n_Bytes_Address(prj_conf[SLAVE_INPUT_ADDR], n)
+        print("String Read from address {0} is {1} : ".format(SLAVE_INPUT_ADDR, data))
+    if choice == 'r':
+        data = input("Enter String to write :")
+        data = ext_mem.Write_String_n_Bytes_Address(prj_conf[SLAVE_INPUT_ADDR], data)
+        print("String written to address {0} is {1} : ".format(SLAVE_INPUT_ADDR, data))
+    if choice == 'i':
+        n = int(input("Enter Input Image Size : "))
         data = ext_mem.Read_n_Bytes_Address(prj_conf[SLAVE_INPUT_ADDR], n)
-        print("Sending Input data to model")
-        mnist_model.model(data)
-    
+
 
 if __name__ == "__main__":
     gpio.init("SLAVE")
@@ -69,8 +76,8 @@ if __name__ == "__main__":
     prj_conf = get_project_config()
     time.sleep(5)
     while(True):
-        choice = input("Enter your choice :")
         print_menu()
+        choice = input("Enter your choice :")
         process_input(choice)
         if choice == 'q':
             break

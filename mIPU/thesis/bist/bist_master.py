@@ -126,43 +126,96 @@ def process(choice):
 
 prj_conf = get_project_config()
 if __name__ == "__main__":
+
+    start= time.time_ns()
     gpio.init("MASTER")
+    end= time.time_ns()
+    print("Time Taken [gpio.init] ", end-start)
+
+    start= time.time_ns()
     ext_mem.init()
+    end= time.time_ns()
+    print("Time Taken [ext_mem.init] ", end-start)
     
-
+    start= time.time_ns()
     bus_controller.select_master()
+    end= time.time_ns()
+    print("Time Taken [bus_controller.select_master] ", end-start)
+
     random_string = gen_random_string()
+    start= time.time_ns()
     ext_mem.Write_String_n_Bytes_Address(prj_conf["SLAVE_1_INPUT_ADDR"], random_string)
+    end= time.time_ns()
     time.sleep(1)
-    string_read = ext_mem.Read_String_n_Bytes_Address(prj_conf["SLAVE_1_INPUT_ADDR"], len(random_string))
-    print("random_string : ", random_string)
-    print("string_read : ", string_read)
-    assert string_read == random_string, "string_read is not equal to random_string"
-
-    bus_controller.select_master()
-    random_string = gen_random_string()
-    ext_mem.Write_String_n_Bytes_Address(prj_conf["SLAVE_2_INPUT_ADDR"], random_string)
-    time.sleep(1)
-    string_read = ext_mem.Read_String_n_Bytes_Address(prj_conf["SLAVE_2_INPUT_ADDR"], len(random_string))
-    print("random_string : ", random_string)
-    print("string_read : ", string_read)
-    assert string_read == random_string, "string_read is not equal to random_string"
-
-    bus_controller.select_master()
-    random_string = gen_random_string()
-    ext_mem.Write_String_n_Bytes_Address(prj_conf["SLAVE_2_OUTPUT_ADDR"], random_string)
-    time.sleep(1)
-    string_read = ext_mem.Read_String_n_Bytes_Address(prj_conf["SLAVE_2_OUTPUT_ADDR"], len(random_string))
-    print("random_string : ", random_string)
-    print("string_read : ", string_read)
-    assert string_read == random_string, "string_read is not equal to random_string"
-
-    bus_controller.select_slave_2()
-    gpio.signal_slave_2()
-    time.sleep(5)
+    print("Time Taken [ext_mem.Write_String_n_Bytes_Address] ", end-start)
     
+    start= time.time_ns()
+    string_read = ext_mem.Read_String_n_Bytes_Address(prj_conf["SLAVE_1_INPUT_ADDR"], len(random_string))
+    end= time.time_ns()
+    print("Time Taken [ext_mem.Read_String_n_Bytes_Address] ", end-start)
+
+    print("random_string : ", random_string)
+    print("string_read : ", string_read)
+    assert string_read == random_string, "string_read is not equal to random_string"
+
+    start= time.time_ns()
+    bus_controller.select_master()
+    end= time.time_ns()
+    print("Time Taken [bus_controller.select_master] ", end-start)
+
+    random_string = gen_random_string()
+    start= time.time_ns()
+    ext_mem.Write_String_n_Bytes_Address(prj_conf["SLAVE_2_INPUT_ADDR"], random_string)
+    end= time.time_ns()
+    time.sleep(1)
+    print("Time Taken [ext_mem.Write_String_n_Bytes_Address] ", end-start)
+
+    start= time.time_ns()
+    string_read = ext_mem.Read_String_n_Bytes_Address(prj_conf["SLAVE_2_INPUT_ADDR"], len(random_string))
+    end= time.time_ns()
+    print("Time Taken [ext_mem.Read_String_n_Bytes_Address] ", end-start)
+    print("random_string : ", random_string)
+    print("string_read : ", string_read)
+    assert string_read == random_string, "string_read is not equal to random_string"
+
+    start= time.time_ns()
+    bus_controller.select_master()
+    end= time.time_ns()
+    print("Time Taken [bus_controller.select_master] ", end-start)
+    random_string = gen_random_string()
+    start= time.time_ns()
+    ext_mem.Write_String_n_Bytes_Address(prj_conf["SLAVE_2_OUTPUT_ADDR"], random_string)
+    end= time.time_ns()
+    time.sleep(1)
+    print("Time Taken [ext_mem.Write_String_n_Bytes_Address] ", end-start)
+
+    start= time.time_ns()
+    string_read = ext_mem.Read_String_n_Bytes_Address(prj_conf["SLAVE_2_OUTPUT_ADDR"], len(random_string))
+    end= time.time_ns()
+    print("Time Taken [ext_mem.Read_String_n_Bytes_Address] ", end-start)
+    print("random_string : ", random_string)
+    print("string_read : ", string_read)
+    assert string_read == random_string, "string_read is not equal to random_string"
+
+    start= time.time_ns()
+    bus_controller.select_slave_2()
+    end= time.time_ns()
+    print("Time Taken [bus_controller.select_slave_2] ", end-start)
+    start= time.time_ns()
+    gpio.signal_slave_2()
+    end= time.time_ns()
+    print("Time Taken [gpio.signal_slave_2] ", end-start)
+    time.sleep(5)
+
+    start= time.time_ns()
     bus_controller.select_slave_1()
+    end= time.time_ns()
+    print("Time Taken [bus_controller.select_slave_1] ", end-start)
+    
+    start= time.time_ns()
     gpio.signal_slave_1()
+    end= time.time_ns()
+    print("Time Taken [gpio.signal_slave_1] ", end-start)
     time.sleep(5)
 
     while(True):
@@ -172,8 +225,15 @@ if __name__ == "__main__":
         if choice == 'q':
             break
 
+    start= time.time_ns()
     gpio.deinit()
+    end= time.time_ns()
+    print("Time Taken [gpio.deinit] ", end-start)
+    
+    start= time.time_ns()
     ext_mem.deinit()
+    end= time.time_ns()
+    print("Time Taken [ext_mem.deinit] ", end-start)
 
 
     
