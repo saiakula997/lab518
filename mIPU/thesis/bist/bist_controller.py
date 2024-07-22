@@ -4,8 +4,8 @@ import string
 import random
 import gpio
 import csv
-import bus_controller
-import shared_memory as ext_mem
+import sn54hc153_mux as bus_controller
+import AT45DB321E as ext_mem
 
 def get_project_config():
     return json.load(open("ext_mem_config.json"))
@@ -229,7 +229,7 @@ if __name__ == "__main__":
     gpio.deinit()
     end= time.time_ns()
     print("Time Taken [gpio.deinit] ", end-start)
-
+    
     start= time.time_ns()
     ext_mem.deinit()
     end= time.time_ns()

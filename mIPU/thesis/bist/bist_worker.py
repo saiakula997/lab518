@@ -4,7 +4,7 @@ import string
 import random
 import argparse
 import gpio
-import shared_memory as ext_mem
+import AT45DB321E as ext_mem
 
 
 parser = argparse.ArgumentParser()
