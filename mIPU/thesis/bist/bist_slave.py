@@ -26,8 +26,8 @@ def slave_ack_master():
     ack()
 
 def callback_fun(channel):
+    global prj_conf
     print("Received Signal from Master")
-    
     random_string = gen_random_string()
     ext_mem.Write_String_n_Bytes_Address(prj_conf[SLAVE_INPUT_ADDR], random_string)
     time.sleep(1)
@@ -56,6 +56,7 @@ def print_menu():
     
 
 def process_input(choice):
+    global prj_conf
     if choice == 'r':
         print("Enter Number of Bytes to Read :", end='')
         n = int(input())
@@ -69,11 +70,10 @@ def process_input(choice):
         n = int(input("Enter Input Image Size : "))
         data = ext_mem.Read_n_Bytes_Address(prj_conf[SLAVE_INPUT_ADDR], n)
 
-
+prj_conf = get_project_config()
 if __name__ == "__main__":
     gpio.init("SLAVE")
     ext_mem.init()
-    prj_conf = get_project_config()
     time.sleep(5)
     while(True):
         print_menu()
