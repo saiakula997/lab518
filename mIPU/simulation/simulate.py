@@ -1,5 +1,9 @@
+import sys
+import struct
+from opcodes import *
+
 opcodes = {
-    "NO opcode": 0b0000,
+    "No_opcode": 0b0000,
     "Prog": 0b0001,
     "ProgStream": 0b0011,
     "A_ADD": 0b0100,
@@ -48,25 +52,26 @@ class OpcodeExtractor:
     def __init__(self, opcodes):
         self.opcodes = opcodes
 
+    def ieee754_to_float(self, int_value):
+        binary32 = format(int_value, '032b')
+        bytes_value = int(binary32, 2).to_bytes(4, byteorder='big')
+        return struct.unpack('>f', bytes_value)[0]
+
     def extract_fields(self, opcode):
-        # Ensure opcode is a 64-bit integer
         if isinstance(opcode, str):
-            opcode = int(opcode, 2)
-
-        # Extract fields based on bit positions
-        opcode_field = (opcode >> 60) & 0b1111
-        destination_address = (opcode >> 48) & 0b111111111111
-        floating_value = (opcode >> 16) & 0xFFFFFFFF
-        next_opcode_field = (opcode >> 12) & 0b1111
-        result_address = opcode & 0b111111111111
-
-        return {
-            "opcode": self._decode_opcode(opcode_field),
-            "destination_address": destination_address,
-            "floating_value": floating_value,
-            "next_opcode": self._decode_opcode(next_opcode_field),
-            "result_address": result_address
-        }
+            opcode = int(opcode, 16)
+        
+        decoded_message = int(hex_message, 16)
+        op_code_value = (decoded_message >> opStrtLoc) & ((1 << opCodeWidth) - 1)
+        op_code = next((key for key, value in opcodes.items() if value == op_code_value), None)
+        next_op_value = (decoded_message >> nextOPStrtLoc) & ((1 << opCodeWidth) - 1)
+        next_op = next((key for key, value in opcodes.items() if value == next_op_value), None)
+        int_value = (decoded_message >> valStrtLoc) & ((1 << FOpWidth) - 1)
+        float_value = self.ieee754_to_float(int_value)
+        dest = (decoded_message >> destStrtLoc) & ((1 << addressWidth) - 1)
+        next_dest = (decoded_message >> nextDestStrtLoc) & ((1 << addressWidth) - 1)
+    
+        return op_code, dest, float_value, next_op, next_dest    
 
     def _decode_opcode(self, opcode_field):
         # Decode the opcode field into its string representation
@@ -83,13 +88,22 @@ class SiteO:
         self.weight = 0
         self.next_opcode = None
         self.next_site_location = None
+        self.oe = OpcodeExtractor(opcodes)
 
     def execute_opcode(self, opcode):
         # Implement logic to execute opcode here
         print(f"Site-O ({self.row}, {self.col}) executing opcode: {opcode}")
-        if opcode == 'PROG':
+        result = oe.extract_fields(opcode)
+        op_code, dest, float_value, next_op, next_dest = result
+        if op_code == 'Prog':
             pass
-        elif opcode == 'MUL':
+        elif op_code == 'ProgStream':
+            pass
+        elif op_code == 'No_opcode' :
+            pass
+        else:
+            print('Invalid Opcode', op_code)
+            sys.exit(1)
             pass
 
 class Quad:
@@ -103,8 +117,14 @@ class Quad:
                 self.grid[row][col].execute_opcode(opcode)
 
 
+hex_message = "0x04000000000a31"
+oe = OpcodeExtractor(opcodes)
+result = oe.extract_fields(hex_message) 
+op_code, dest, float_value, next_op, next_dest = result
 
-# Example Usage
-quad = Quad()
-opcode = "ADD"  # Example opcode
-quad.execute_all(opcode)  # Execute opcode on all Site-Os
+print(f"Op Code: {op_code}, \
+    Destination: {dest},\
+    Value: {float_value},\
+    Next Op: {next_op}, \
+    Next Destination: {next_dest}"\
+    )
